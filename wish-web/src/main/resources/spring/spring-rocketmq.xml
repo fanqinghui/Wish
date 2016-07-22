@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans.xsd 
+       		http://www.springframework.org/schema/context 
+       		http://www.springframework.org/schema/context/spring-context.xsd
+       		http://www.springframework.org/schema/aop 
+       		http://www.springframework.org/schema/aop/spring-aop.xsd
+       		http://www.springframework.org/schema/mvc
+       		http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+       default-autowire="byName">
+
+
+	<!-- 监听实现 -->
+    <!--<bean id="rocketMqListener" class="com.jd.wxz.rocketmq.SimpleRocketMqListener"></bean>-->
+    <!-- 监听配置 -->
+   <!-- <bean id="consumer" class="com.jd.wxz.rocketmq.spring.Consumer" init-method="init">
+        <property name="consumerGroup" value="PushConsumer"/>
+        <property name="namesrvAddr" value="192.168.146.109:9876" />
+        <property name="topic" value="PushTopic"/>
+        <property name="subExpression" value="push"/>
+        <property name="rocketMqMessageListener" ref="rocketMqListener"/>
+    </bean>-->
+
+</beans>

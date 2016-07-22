@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.foundation.dao.MyBatisRepository.write.app.AppVersionDao">
+
+    <!-- 插入： 1.由数据库生成id并赋值到user对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+    <insert id="save" parameterType="com.foundation.dao.entry.app.AppVersion" useGeneratedKeys="true" keyProperty="id">
+		insert into tb_app_version (
+		type, version, url, forceUpdate,createDate,updateDate)
+		values (
+		#{type}, #{version}, #{url}, #{forceUpdate},#{createDate},#{updateDate})
+	</insert>
+
+    <!-- 删除版本 -->
+    <delete id="delete" parameterType="long">
+        delete from tb_app_version where id=#{id}
+    </delete>
+
+</mapper>

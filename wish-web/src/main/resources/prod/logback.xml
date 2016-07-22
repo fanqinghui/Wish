@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--变量声明-->
+    <property name="app.name" value="wishWeb"/>
+    <property name="log.base" value="/data/logs/ms" />
+
+    <contextName>${app.name}</contextName>
+
+    <!-- 用户登录拦截器-->
+    <appender name="loginInterceptorLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Encoding>UTF-8</Encoding>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.base}/loginInterceptorLog.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </layout>
+    </appender>
+    <logger name="com.foundation.Web.interceptor.MsAppLoginInterceptor"
+            level="info" additivity="true">
+        <appender-ref ref="loginInterceptorLog"/>
+    </logger>
+    <!-- 用户登录拦截器-->
+
+    <!--default_log-->
+    <appender name="default_log"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.base}/default_log.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </layout>
+    </appender>
+    <logger name="com.foundation" level="DEBUG">
+        <appender-ref ref="default_log"/>
+    </logger>
+    <!--default_log end-->
+
+
+    <!--biz log-->
+    <!--<appender name="biz_log"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.base}/biz_log.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </layout>
+    </appender>
+    <logger name="com.foundation.biz" level="info" additivity="false" >
+        <appender-ref ref="biz_log" />
+    </logger>-->
+    <!--biz log end-->
+
+    <!--service log-->
+    <!--	<appender name="service_log"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${log.base}/service_log.%d{yyyy-MM-dd}.log
+                </fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+                </pattern>
+                <charset>UTF-8</charset>
+            </layout>
+        </appender>
+        <logger name="com.foundation.service" level="info" additivity="false" >
+            <appender-ref ref="service_log" />
+        </logger>-->
+    <!--service log end-->
+
+    <!--其他日志包结构符合基本的交由root的appender打印输出   -->
+    <logger name="org.apache.catalina" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="com.google.code" level="ERROR"/>
+    <logger name="org.springframework" level="WARN"/>
+
+    <logger name="com.ibatis.mybatis" level="DEBUG"/>
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG"/>
+    <logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG"/>
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+
+</configuration>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:p="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+        	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 连接服务配置 -->
+	<rabbit:connection-factory id="connectionFactory" 
+		host="${rabbit.host}" username="${rabbit.username}" password="${rabbit.password}"
+		port="${rabbit.port}" />
+
+	<rabbit:admin connection-factory="connectionFactory" />
+	
+	<bean id="retryTemplate" class="org.springframework.retry.support.RetryTemplate">
+		<property name="backOffPolicy">
+			<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+				<property name="initialInterval" value="500" />
+				<property name="multiplier" value="10.0" />
+				<property name="maxInterval" value="1000" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!--<bean id="jsonMessageConverter"
+		class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
+	<bean id="defaultMessageHelper" class="com.eloancn.framework.queue.DefaultMessageHelper" />-->
+
+	<!-- ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ -->
+
+	<!-- queue 队列声明 start -->
+	<rabbit:queue id="queue_pay_cardBindForClient_back" durable="true" auto-delete="false"
+		exclusive="false" name="queue_pay_cardBindForClient_back" /><!--绑卡：绑卡结果反馈消息接收队列 -->
+
+	<!-- queue 队列声明 end -->
+	
+	<!-- direct交换器声明  -->
+	<rabbit:direct-exchange name="exchange_direct"
+		durable="true" auto-delete="false" id="exchange_direct">
+		<rabbit:bindings>
+			<rabbit:binding queue="queue_pay_cardBindForClient_back" 
+				key="queue_pay_cardBindForClient_back_key" /><!-- 绑卡：绑卡结果反馈 -->
+				
+			<rabbit:binding queue="queue_pay_unbindCardOnLine_back" 
+				key="queue_pay_unbindCardOnLine_back_key" /><!-- 解绑：解绑结果反馈 -->
+			
+			<rabbit:binding queue="queue_lqt_acc_withdraw_notify" 
+				key="queue_lqt_acc_withdraw_notify_key" /><!--提现：提现申请通知老前台，用于生成老数据库对应数据 -->
+				
+			<rabbit:binding queue="queue_lqt_acc_withdraw_bankReturn_notify" 
+				key="queue_lqt_acc_withdraw_bankReturn_notify_key" /><!--提现：银行反馈通知老前台，用于生成老数据库对应数据 -->
+			
+			<rabbit:binding queue="queue_lqt_acc_rechargeOnLine_notify" 
+				key="queue_lqt_acc_rechargeOnLine_notify_key" /><!--充值：老前台接收充值申请消息队列 -->
+			
+			<rabbit:binding queue="queue_lqt_acc_rechargeOnLine_bankReturn_notify" 
+				key="queue_lqt_acc_rechargeOnLine_bankReturn_notify_key" /><!--充值：充值银行反馈通知老前台，用于生成老数据库对应数据 -->
+			
+			<rabbit:binding queue="queue_lqt_acc_rechargeOffLine_bankReturn_notify" 
+				key="queue_lqt_acc_rechargeOffLine_bankReturn_notify_key" /><!--线下充值：充值银行反馈通知老前台，用于生成老数据库对应数据 -->
+
+			<rabbit:binding queue="queue_message_businessMsg_send"
+				key="queue_message_businessMsg_send_key" /><!--充值/提现 发送短信-->
+			
+			
+				
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+	
+	<rabbit:template exchange="exchange_direct" id="directAmqpTemplate"
+		retry-template="retryTemplate" connection-factory="connectionFactory"
+		message-converter="jsonMessageConverter"/>
+
+
+	<!-- client setting -->
+	<!-- topic交换器声明  -->
+	<rabbit:topic-exchange name="exchange_topic"
+		durable="true" auto-delete="false" id="exchange_topic">
+		<rabbit:bindings>
+			
+			<rabbit:binding 
+				queue="queue_pay_dkweb_rechargeOnLine_back" pattern="queue_pay_*_rechargeOnLine_back_key" >
+			</rabbit:binding><!--充值：网银充值结果反馈-->
+			<rabbit:binding 
+				queue="queue_ht_acc_rechargeOnLine_notify" pattern="queue_*_acc_rechargeOnLine_notify_key" >
+			</rabbit:binding><!--充值：后台接收充值申请消息队列-->
+			<rabbit:binding 
+				queue="queue_ht_acc_rechargeOnLine_bankReturn_notify" pattern="queue_*_acc_rechargeOnLine_bankReturn_notify_key" >
+			</rabbit:binding><!--充值：充值成功通知后台-->
+			
+
+			<rabbit:binding
+				queue="queue_pay_dkweb_rechargeOffLine_back" pattern="queue_pay_*_rechargeOffLine_back_key" >
+			</rabbit:binding><!--线下充值： 线下充值结果反馈-->
+			<rabbit:binding
+				queue="queue_ht_acc_rechargeOffLine_bankReturn_notify" pattern="queue_*_acc_rechargeOffLine_bankReturn_notify_key" >
+			</rabbit:binding><!--线下充值：充值成功通知后台-->
+			
+			
+			<rabbit:binding 
+				queue="queue_pay_dkweb_withdrawCashApplyByCust_back" pattern="queue_pay_*_withdrawCashApplyByCust_back_key" >
+			</rabbit:binding><!--提现：提现结果反馈-->
+			<rabbit:binding
+				queue="queue_pay_dkweb_cancelWithdrawCash_back" pattern="queue_pay_*_cancelWithdrawCash_back_key" >
+			</rabbit:binding><!--提现：提现退款结果反馈 -->
+			<rabbit:binding
+				queue="queue_ht_acc_withdraw_notify" pattern="queue_*_acc_withdraw_notify_key" >
+			</rabbit:binding><!--提现：后台接收提现申请消息队列 -->
+			<rabbit:binding
+				queue="queue_ht_acc_withdraw_bankReturn_notify" pattern="queue_*_acc_withdraw_bankReturn_notify_key" >
+			</rabbit:binding><!--提现：提现结果银行反馈通知后台 -->
+
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+	
+	<rabbit:template exchange="exchange_topic" id="topicAmqpTemplate"
+		retry-template="retryTemplate" connection-factory="connectionFactory"
+		message-converter="jsonMessageConverter" />
+	
+	<!--  发布/订阅模式发送消息service  -->
+	<!--<bean id="topicAmqMessageService" class="com.eloancn.framework.queue.AmqMessageService">
+		<property name="rabbitTemplate" ref="topicAmqpTemplate"></property>
+		<property name="serialNoFieldName" value="orderId"></property>
+		<property name="appId" value="dkweb-acc"></property>
+		<property name="messageHelper" ref="defaultMessageHelper"></property>
+	</bean>-->
+	
+	<!--
+	<rabbit:listener-container connection-factory="connectionFactory" message-converter="jsonMessageConverter">
+		<rabbit:listener ref="withdrawApplyServiceMessageListener" queue-names="queue_pay_dkweb_withdrawCashApplyByCust_back" />
+		<rabbit:listener ref="withdrawRefundServiceMessageListener" queue-names="queue_pay_dkweb_cancelWithdrawCash_back" />
+	</rabbit:listener-container>-->
+	
+</beans>

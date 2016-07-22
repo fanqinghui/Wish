@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="basepackage">com.eloancn.account</entry>
+	<entry key="outRoot">C:\\account</entry>
+	<!-- 数据库类型映射  -->
+	<entry key="java_typemapping.java.sql.Timestamp">java.util.Date</entry>
+	<entry key="java_typemapping.java.sql.Date">java.util.Date</entry>
+	<entry key="java_typemapping.java.sql.Time">java.util.Date</entry>	
+	<entry key="java_typemapping.java.lang.Byte">Integer</entry>
+	<entry key="java_typemapping.java.lang.Short">Integer</entry>
+	<entry key="java_typemapping.java.math.BigDecimal">Long</entry>
+	<!-- Mysql -->
+	<entry key="jdbc_url">jdbc:mysql://localhost:3306/wish?useUnicode=true&amp;characterEncoding=UTF-8</entry>
+	<entry key="jdbc_driver">com.mysql.jdbc.Driver</entry>
+	<entry key="jdbc_username">root</entry>
+	<entry key="jdbc_password">root</entry>
+	<entry key="gg_isOverride">true</entry>
+	<entry key="tableRemovePrefixes">tb_</entry>
+</properties>

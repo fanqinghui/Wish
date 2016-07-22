@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">
+
+
+	<!-- 加载 config.properties 配置文件 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<dubbo:application name="account_provider" />
+	<dubbo:registry address="zookeeper://${zookeeper.url}" id="accZookeeper"/>
+	<dubbo:protocol name="dubbo" port="20880" />
+
+
+	<!-- 账户子系统依赖的用户中心服务 -->
+	<!--<dubbo:reference interface="com.xxx.usercenter.api.UserBaseInfoService"
+				   id="userBaseInfoService" group="usercenter_soa" version="1.0"
+				   timeout="60000" protocol="dubbo" registry="accZookeeper" validation="false" retries="2" check="false"/>-->
+</beans>

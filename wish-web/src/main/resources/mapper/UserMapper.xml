@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.foundation.dao.MyBatisRepository.write.sys.SysUserDao">
+    <!--
+        获取用户: 输出直接映射到对象, login_name列要"as loginName"以方便映射 ,team_id as "team.id"创建team对象并赋值
+    -->
+    <select id="queryById" parameterType="long" resultType="com.foundation.dao.entry.sys.SysUser">
+        select id,
+        user_name as userName
+        from tb_sys_user
+        where id=#{id}
+    </select>
+
+    <!-- 查询用户,演示: 1.输入用map传入多个参数 2.<where>语句, 智能添加where和and关键字 3.输出直接映射对象 -->
+    <select id="qu" parameterType="map" resultType="com.foundation.dao.entry.sys.SysUser">
+        select id, name, email,
+        login_name as loginName
+        from tb_sys_user
+        <where>
+            <if test="loginName != null">
+                login_name=#{loginName}
+            </if>
+            <if test="name != null">
+                and name=#{name}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入用户： 1.由数据库生成id并赋值到user对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+    <insert id="save" parameterType="com.foundation.dao.entry.sys.SysUser" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_sys_user (
+        login_name, name, password, email)
+        values (
+        #{loginName}, #{name}, #{password}, #{email})
+    </insert>
+
+    <!-- 删除用户 -->
+    <delete id="delete" parameterType="long">
+        delete from tb_sys_user where id=#{id}
+    </delete>
+</mapper> 

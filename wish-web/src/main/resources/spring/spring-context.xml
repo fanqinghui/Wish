@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+       default-autowire="byName">
+
+    <!-- 定义aspectj -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!--设置扫描biz,service,dao各层package-->
+    <!--事物层，具体业务操作-->
+    <context:component-scan base-package="com.foundation.biz.*"/>
+    <context:component-scan base-package="com.foundation.service.*"/>
+    <context:component-scan base-package="com.foundation.dao.*"/>
+
+
+    <!--zk配置数据初始化 -->
+    <!--<context:component-scan base-package="com.foundation.config.init.*" />-->
+
+    <!--统一异常拦截-->
+   <!--<bean class="com.foundation.Web.interceptor.MsAppExceptionAdvisor"/>-->
+
+    <!--登陆拦截器-->
+    <mvc:interceptors>
+        <!-- 使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求 -->
+        <bean class="com.foundation.interceptor.LoginInterceptor"/>
+        <mvc:interceptor>
+            <mvc:mapping path="/xxx/v1/modifyPassword"/>
+            <mvc:mapping path="/xxx/v1/logout"/>
+            <bean class="com.foundation.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--监控spring bean 性能   如果你的dateSource定义在spring中，javamelody会自动发现不需要额外配置-->
+    <bean id="facadeMonitoringAdvisor" class="net.bull.javamelody.MonitoringSpringAdvisor">
+        <property name="pointcut">
+            <bean class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+                <property name="patterns"> <!-- value="org\.noahx\.test\..*"-->
+                   <array>
+                        <value>org\.noahx\.test\..*</value>
+                    </array>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!--上传统一参数设置-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="10485760000"></property>
+        <property name="maxInMemorySize" value="40960"></property>
+    </bean>
+
+</beans>
