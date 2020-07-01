@@ -53,7 +53,7 @@
         <!--数据库项目属性 -->
         <jdbc.driver.groupId>mysql</jdbc.driver.groupId>
         <jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
-        <jdbc.driver.version>5.1.35</jdbc.driver.version>
+        <jdbc.driver.version>8.0.16</jdbc.driver.version>
     </properties>
 
     <!-- 预定义依赖项的version,scope与exclusions,子项目中只需定义groupId 与 artifactId 即可 -->
