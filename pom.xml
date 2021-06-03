@@ -18,7 +18,7 @@
         <wish.version>1.0-SNAPSHOT</wish.version>
         <spring.version>4.3.0.RELEASE</spring.version>
         <aspectj.version>1.7.4</aspectj.version>
-        <httpclient.version>4.5.1</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <jackson.version>2.4.0</jackson.version>
         <orika.version>1.4.6</orika.version>
         <fastjson.version>1.2.3</fastjson.version>
