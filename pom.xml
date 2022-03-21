@@ -42,7 +42,7 @@
         <spring.rabbit.version>1.6.0.RELEASE</spring.rabbit.version>
         <rabbitmq.version>3.5.3</rabbitmq.version>
         <!--soa-->
-        <dubbo.version>2.5.3</dubbo.version>
+        <dubbo.version>2.6.9</dubbo.version>
         <zk.version>3.4.6</zk.version>
         <zk-curator.version>1.3.3</zk-curator.version>
       
